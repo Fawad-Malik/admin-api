@@ -40,7 +40,7 @@ def add_inventory(product_id: int, payload: schemas.InventorySchema, db: Session
     return {"status": "success", "inventory_id": inventory.inventory_id}
 
 @router.patch('/inventory')
-def update_inventory(inventory_id: int, payload: schemas.NoteBaseSchema, db: Session = Depends(get_db)):
+def update_inventory(inventory_id: int, payload: schemas.InventorySchema, db: Session = Depends(get_db)):
     inventory_query = db.query(models.Inventory).filter(models.Inventory.inventory_id == inventory_id)
     inventory = inventory_query.first()
     if not inventory:
