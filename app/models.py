@@ -29,9 +29,9 @@ class Product(Base):
 class Sale(Base):
     __tablename__ = 'sales'
     sale_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    sale_price = Column(Float, nullable=False)
+    sale_price = Column(Float)
     sale_time = Column(TIMESTAMP(timezone=True), default=func.now())
-    sale_date = Column(Date, nullable=False)
+    sale_date = Column(Date, default=func.now())
     products = relationship("Product", secondary="sale_products", back_populates='sales')
 
 class Inventory(Base):
@@ -39,6 +39,13 @@ class Inventory(Base):
     inventory_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     product_id = Column(ForeignKey('products.product_id'))
     quantity = Column(Integer, default=0)
-    created_on = Column(DateTime, nullable=False, default=func.now())
-    updated_on = Column(DateTime, nullable=False, default=func.now(), onupdate=datetime.datetime.utcnow())
     product = relationship("Product", back_populates='inventory')
+    inventory_log = relationship("InventoryLog", back_populates='inventory')
+
+class InventoryLog(Base):
+    __tablename__ = "inventory_logs"
+    Inventory_log_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    inventory_id = Column(ForeignKey('products.product_id'))
+    previous_value = Column(Integer)
+    updated_on = Column(DateTime, default=func.now(), onupdate=datetime.datetime.utcnow())
+    inventory = relationship("InventoryLog", back_populates='inventory_log')
