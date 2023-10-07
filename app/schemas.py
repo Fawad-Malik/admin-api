@@ -1,7 +1,5 @@
-from datetime import datetime
-from typing import List
 from pydantic import BaseModel
-
+from typing import List
 class CategorySchema(BaseModel):
     category_name : str
 
@@ -12,8 +10,12 @@ class ProductSchema(BaseModel):
     category_id : int
 
 class InventorySchema(BaseModel):
-    product_id = int
-    quantity = int
+    product_id : int
+    quantity : int
 
 class SaleSchema(BaseModel):
-    product_ids= List[int]
+    product_id: int 
+    quantity: int
+
+class ListSaleSchema(BaseModel):
+    data: List[SaleSchema]
