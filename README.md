@@ -1,4 +1,4 @@
-# Simple Admind API With Fastapi and SQLAlchemy (Python 3)
+# Simple Admin API With Fastapi and SQLAlchemy (Python 3)
 
 Instructions for building Create, Read, Update and Delete using REST Full API with FastAPI and SQLAlchemy
 
