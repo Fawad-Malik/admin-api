@@ -11,7 +11,6 @@ DB_PW = os.getenv("DB_PW")
 DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
 
-SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
 
 MYSQL_DATABASE_URI = "mysql+pymysql://{}:{}@{}:{}/{}".format(DB_USER, DB_PW, DB_HOSTNAME, DB_PORT, DB_NAME)
 engine = create_engine(
