@@ -1,7 +1,7 @@
 import datetime
 from . import schemas, models
 from sqlalchemy.orm import Session
-from fastapi import Depends, HTTPException, status, APIRouter, Response
+from fastapi import Depends, HTTPException, status, APIRouter
 from .settings import get_db
 from sqlalchemy import and_
 
@@ -70,27 +70,25 @@ def add_inventory(payload: schemas.InventorySchema, db: Session = Depends(get_db
     db.refresh(inventory)
     return {"status": "success", "inventory_id": inventory.inventory_id}
 
-# I have to fix this endpoint by tomorrow
-# @router.post('/sale', status_code=status.HTTP_201_CREATED)
-# def add_sale(payload: schemas.ListSaleSchema, db: Session = Depends(get_db)):
-#     params = payload.data
-#     products = db.query(models.Product).filter(models.Product.product_id.in_(payload.product_ids)).all()
-#     if len(payload.data) != len(products):
-#         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-#                             detail='Please provide valid parameters')
-#     for param in params:
-#         if param.product_id in products:
-#             pass
-#     products = db.query(models.Product).filter(models.Product.product_id.in_(payload.product_ids)).all()
-#     total_price = 0
-#     for product in products:
-#         total_price += product.product_price
-#     sale = models.Sale(total_price=total_price)
-#     db.add(sale)
-#     sale.products = products
-#     db.commit()
-#     db.refresh(sale)
-#     return {"status": "success", "sale_id": sale.sale_id}
+@router.post('/sale', status_code=status.HTTP_201_CREATED)
+def add_sale(payload: schemas.ListSaleSchema, db: Session = Depends(get_db)):
+    params = payload.data
+    total_price = 0
+    products = []
+    for param in params:
+        product = db.query(models.Product).filter(models.Product.product_id == param.product_id).first()
+        if not product.inventory >= param.quantity:
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                            detail=f"There is no enuough inventory against this {product.product_id}")
+        products.append(product)
+        total_price += (product.product_price * param.quantity)
+        product.inventory -= param.quantity
+    sale = models.Sale(total_price=total_price)
+    db.add(sale)
+    sale.products = products
+    db.commit()
+    db.refresh(sale)
+    return {"status": "success", "sale_id": sale.sale_id}
 
 @router.get('/sale', status_code=status.HTTP_200_OK)
 def get_saless(db: Session = Depends(get_db), product_id: int=0, category_id: int=0, start_date: str ='', end_date: str = ''):

@@ -53,7 +53,7 @@ class Inventory(Base):
     inventory_logs = relationship("InventoryLog", back_populates='inventory')
 
 """
-sales table to cover sale moduleS
+sales table to cover sale module
 """
 class Sale(Base):
     __tablename__ = 'sales'

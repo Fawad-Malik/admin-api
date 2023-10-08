@@ -58,6 +58,7 @@ DB_NAME = admin
 5. Run the local server with this command
 ```
 uvicorn app.manage:app --reload
+Note: It will also create required tables in database we have configured.
 ```
 6. If successful then hit this endpoint /api/healthchecker(GET) to verify
 ```
