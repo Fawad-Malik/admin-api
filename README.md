@@ -25,7 +25,7 @@ Make sure you have installed Python 3 on your device
   |--- .requirements.txt
 ```
 
-### Step to create flask rest api
+### Step to create fastapi rest api
 
 A step by step series of examples that tell you how to get a development env running
 
